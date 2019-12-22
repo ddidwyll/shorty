@@ -3,8 +3,6 @@ defmodule Links.Token do
 
   import String, only: [replace: 3]
 
-  def type, do: :string
-
   def autogenerate do
     import :crypto, only: [strong_rand_bytes: 1]
     import Base, only: [url_encode64: 1]
@@ -16,8 +14,8 @@ defmodule Links.Token do
     |> binary_part(0, 7)
   end
 
-  def cast(url), do: {:ok, replace(url, ~r/[^a-zA-Z0-9_-]+/, "")}
-
-  def dump(token), do: {:ok, token}
-  def load(token), do: {:ok, token}
+  def type, do: :string
+  def cast(string), do: {:ok, string}
+  def load(string), do: {:ok, string}
+  def dump(string), do: {:ok, replace(string, ~r/[^a-zA-Z0-9_-]+/, "")}
 end
