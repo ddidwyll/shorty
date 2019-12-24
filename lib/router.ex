@@ -7,6 +7,12 @@ defmodule Router do
 
   plug(Plug.Static, at: "/static", from: @client_dir)
 
+  plug(Plug.Parsers,
+    parsers: [:json],
+    pass: ["application/json", "text/json"],
+    json_decoder: Jason
+  )
+
   plug(:match)
   plug(:dispatch)
 
@@ -15,25 +21,16 @@ defmodule Router do
     send_file(conn, 200, @client_dir <> "/index.html")
   end
 
-  get _ do
-    id = get_path(conn)
-
+  get "/:id" do
     case get_link(id) do
       {:ok, %{url: url}} -> redirect(conn, url)
       _ -> redirect(conn, "/#404?" <> id)
     end
   end
 
-  defp get_path(conn) do
-    import String, only: [trim: 2]
-    
-    conn.request_path
-    |> trim("/")
-  end
-
-  defp redirect(conn, to \\ nil) do
+  defp redirect(conn, to) do
     conn
     |> resp(301, "")
-    |> put_resp_header("location", to || "/#404")
+    |> put_resp_header("location", to || "/")
   end
 end
