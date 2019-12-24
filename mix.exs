@@ -21,7 +21,8 @@ defmodule Shorty.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, "~> 0.15.3"}
+      {:postgrex, "~> 0.15.3"},
+      {:jason, "~> 1.0"}
     ]
   end
 end
