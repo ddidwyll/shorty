@@ -22,6 +22,7 @@ defmodule Shorty.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:postgrex, "~> 0.15.3"},
+      {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.0"}
     ]
   end
