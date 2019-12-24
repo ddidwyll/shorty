@@ -6,14 +6,21 @@ defmodule Links.Repo.Migrations.Setup do
       add :id, :string, primary_key: true
       add :url, :string, null: false
       add :owner_mail, :text
+      add :shadow_mail, :text
       add :confirm_token, :string
+
+      add :confirmed, :boolean, default: false
     end
   
     create table(:change_requests, primary_key: false) do
       add :id, :string, primary_key: true
-      add :old_link, :string, null: false
-      add :new_link, :string, null: false
       add :created, :naive_datetime
+
+      add :old_id,
+        references(:links, type: :string, on_delete: :delete_all)
+
+      add :new_id,
+        references(:links, type: :string, on_delete: :delete_all)
     end
   end
 end

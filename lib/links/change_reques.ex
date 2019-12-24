@@ -6,8 +6,8 @@ defmodule Links.ChangeRequest do
   @primary_key {:id, Token, autogenerate: true}
   @timestamps_opts inserted_at: :created, updated_at: false
   schema "change_requests" do
-    field(:old_hash, :string)
-    field(:new_hash, :string)
+    field(:old_id, Token)
+    field(:new_id, Token)
 
     timestamps()
   end
