@@ -23,7 +23,7 @@ defmodule Router do
 
   get "/:id" do
     case get_link(id) do
-      {:ok, %{url: url}} -> redirect(conn, url)
+      {:ok, %{url: url, confirmed: true}} -> redirect(conn, url)
       _ -> redirect(conn, "/#404?" <> id)
     end
   end
