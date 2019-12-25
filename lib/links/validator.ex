@@ -60,12 +60,13 @@ defmodule Links.Validator do
   def build_link(url, owner \\ nil) do
     with {:ok, url} <- validate_url(url),
          {:ok, owner_mail, shadow_mail} <- prepare_mail(owner) do
-      %Link{
-        url: url,
-        owner_mail: owner_mail,
-        shadow_mail: shadow_mail,
-        confirmed: true
-      }
+      {:ok,
+       %Link{
+         url: url,
+         owner_mail: owner_mail,
+         shadow_mail: shadow_mail,
+         confirmed: true
+       }}
     end
   end
 end
