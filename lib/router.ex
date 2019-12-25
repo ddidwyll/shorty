@@ -22,6 +22,16 @@ defmodule Router do
     send_file(conn, 200, @client_dir <> "/index.html")
   end
 
+  get "/get/:id" do
+    case get_link(id) do
+      {:ok, link} ->
+        %{shadow_mail: shadow, url: url, confirmed: confirmed} = link
+      message = ~s/{"id":"#{id}","shadow":"#{shadow}","url":"#{url}","confirmed":"#{confirmed}"}/
+      send_resp(conn, 200, message)
+      {:error, err} -> send_resp(conn, 404, err)
+    end
+  end
+
   get "/:id" do
     case get_link(id) do
       {:ok, %{url: url, confirmed: true}} -> redirect(conn, url)
