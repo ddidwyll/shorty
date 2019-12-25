@@ -42,7 +42,7 @@
           {link.url}
         </td>
         <td>
-          <BtnGroup center block>
+          <BtnGroup right block>
             <Button
               on:click={() => copy(link.id)}
               label="Copy"
@@ -80,50 +80,22 @@
     const url = location.origin + '/' + id
     navigator.clipboard.writeText(url)
   }
-
-  /*const submit = async () => {
-    if (!url) return
-
-    const data = { url, mail: mail || undefined }
-
-    const res = await fetch("/create", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-
-    if (res.status === 400) {
-      message = await res.json()
-    }
-    else if (res.status === 200) {
-      const link = await res.json()
-      links.add(link)
-      location.hash = "success?" + link.id
-    }
-    else {
-      message = {message: 'Something went wrong, try again later'}
-    }
-
-    clearInterval(interval)
-    interval = setInterval(() => (message = {}), 10000)
-  }*/
 </script>
 
 <style>
-  :global(.small:not(#hack)) {
-    min-height: auto;
-  }
   table {
-    margin: 2rem auto 0;
+    margin: 1.5rem auto 0;
+    border-collapse: collapse;
+    font-size: 0.9rem;
   }
   th {
     text-align: left;
-    background-color: var(--common-background-color-light);
   }
   td, th {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+  tr {
+    border: 1px solid #ddd;
   }
   tr:nth-child(odd) {
     background-color: var(--common-background-color-lighten);

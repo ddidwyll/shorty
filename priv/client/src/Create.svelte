@@ -1,4 +1,6 @@
-<Container small scrollx>
+<Container small middle>
+  <h2>Welcome! Ready to get started?</h2>
+  <h4>No registration, no ads, no logs, no fee.</h4>
   <Input
     block
     large
@@ -7,16 +9,31 @@
     value={url}
     on:enter={() => submit()}
     invalid={message.url}
-  />
+  >
+    <Button
+      on:click={() => (url = "")}
+      hidden={!url}
+      label="X"
+      large
+    />
+  </Input>
   <Input
     block
     large
     label={message.mail || "You can specify your email, to edit this link in future"}
     on:input={(e) => (mail = e.detail)}
     value={mail}
+    hints={emails()}
     on:enter={() => submit()}
     invalid={message.mail}
-  />
+  >
+    <Button
+      on:click={() => (mail = "")}
+      hidden={!mail}
+      label="X"
+      large
+    />
+  </Input>
   <Button
     on:click={() => submit()}
     disabled={!url}
@@ -32,13 +49,26 @@
 
 <script>
   import { Input, Container, Button } from 'forui'
-  import links from './stores/links.js'
   import router from './stores/router.js'
+  import links from './stores/links.js'
+  import { onMount } from 'svelte'
 
   let url = ""
   let mail = ""
   let message = {}
   let interval = null
+
+  onMount(async () => {
+    const clipboard = await navigator.clipboard.readText()
+    if (clipboard.startsWith('http')) {
+      url = clipboard
+    }
+  })
+
+  const emails = () => {
+    const arr = Object.values($links).map(l => l.mail).filter(m => m)
+    return [...new Set(arr)]
+  }
 
   const submit = async () => {
     if (!url) return
@@ -71,7 +101,9 @@
 </script>
 
 <style>
-  :global(.small > .block) {
-    margin-bottom: 1.1rem;
+  :global(.small > .block), h2, h4 {
+    margin-bottom: 1.3rem;
+    font-weight: 400;
+    text-align: center;
   }
 </style>

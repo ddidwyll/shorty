@@ -428,17 +428,18 @@ var app = (function () {
     function create_fragment(ctx) {
     	let div;
     	let current;
-    	const default_slot_template = /*$$slots*/ ctx[4].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
+    	const default_slot_template = /*$$slots*/ ctx[5].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "svelte-peid7");
+    			attr_dev(div, "class", "svelte-aalbab");
     			toggle_class(div, "scrollx", /*scrollx*/ ctx[0]);
     			toggle_class(div, "scrolly", /*scrolly*/ ctx[1]);
     			toggle_class(div, "small", /*small*/ ctx[2]);
+    			toggle_class(div, "middle", /*middle*/ ctx[3]);
     			add_location(div, file, 0, 0, 0);
     		},
     		l: function claim(nodes) {
@@ -454,8 +455,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 8) {
-    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[3], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[3], dirty, null));
+    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 16) {
+    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[4], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[4], dirty, null));
     			}
 
     			if (dirty & /*scrollx*/ 1) {
@@ -468,6 +469,10 @@ var app = (function () {
 
     			if (dirty & /*small*/ 4) {
     				toggle_class(div, "small", /*small*/ ctx[2]);
+    			}
+
+    			if (dirty & /*middle*/ 8) {
+    				toggle_class(div, "middle", /*middle*/ ctx[3]);
     			}
     		},
     		i: function intro(local) {
@@ -500,7 +505,8 @@ var app = (function () {
     	let { scrollx = false } = $$props;
     	let { scrolly = false } = $$props;
     	let { small = false } = $$props;
-    	const writable_props = ["scrollx", "scrolly", "small"];
+    	let { middle = false } = $$props;
+    	const writable_props = ["scrollx", "scrolly", "small", "middle"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Container> was created with unknown prop '${key}'`);
@@ -512,26 +518,34 @@ var app = (function () {
     		if ("scrollx" in $$props) $$invalidate(0, scrollx = $$props.scrollx);
     		if ("scrolly" in $$props) $$invalidate(1, scrolly = $$props.scrolly);
     		if ("small" in $$props) $$invalidate(2, small = $$props.small);
-    		if ("$$scope" in $$props) $$invalidate(3, $$scope = $$props.$$scope);
+    		if ("middle" in $$props) $$invalidate(3, middle = $$props.middle);
+    		if ("$$scope" in $$props) $$invalidate(4, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => {
-    		return { scrollx, scrolly, small };
+    		return { scrollx, scrolly, small, middle };
     	};
 
     	$$self.$inject_state = $$props => {
     		if ("scrollx" in $$props) $$invalidate(0, scrollx = $$props.scrollx);
     		if ("scrolly" in $$props) $$invalidate(1, scrolly = $$props.scrolly);
     		if ("small" in $$props) $$invalidate(2, small = $$props.small);
+    		if ("middle" in $$props) $$invalidate(3, middle = $$props.middle);
     	};
 
-    	return [scrollx, scrolly, small, $$scope, $$slots];
+    	return [scrollx, scrolly, small, middle, $$scope, $$slots];
     }
 
     class Container extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { scrollx: 0, scrolly: 1, small: 2 });
+
+    		init(this, options, instance, create_fragment, safe_not_equal, {
+    			scrollx: 0,
+    			scrolly: 1,
+    			small: 2,
+    			middle: 3
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -562,6 +576,14 @@ var app = (function () {
     	}
 
     	set small(value) {
+    		throw new Error("<Container>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get middle() {
+    		throw new Error("<Container>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set middle(value) {
     		throw new Error("<Container>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -1852,7 +1874,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(figure, "class", "svelte-1cbufcb");
+    			attr_dev(figure, "class", "svelte-1w3ictj");
     			add_location(figure, file$5, 28, 4, 725);
     		},
     		m: function mount(target, anchor) {
@@ -1918,7 +1940,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "svelte-1cbufcb");
+    			attr_dev(span, "class", "svelte-1w3ictj");
     			add_location(span, file$5, 30, 8, 773);
     			dispose = listen_dev(span, "click", click_handler, false, false, false);
     		},
@@ -2003,16 +2025,16 @@ var app = (function () {
     			input_1.hidden = /*hidden*/ ctx[2];
     			input_1.required = /*required*/ ctx[10];
     			input_1.autofocus = /*autofocus*/ ctx[16];
-    			attr_dev(input_1, "class", "svelte-1cbufcb");
+    			attr_dev(input_1, "class", "svelte-1w3ictj");
     			toggle_class(input_1, "valid", /*valid*/ ctx[3]);
     			toggle_class(input_1, "invalid", /*invalid*/ ctx[4]);
     			toggle_class(input_1, "clean", /*clean*/ ctx[5]);
     			toggle_class(input_1, "simple", /*simple*/ ctx[6]);
     			add_location(input_1, file$5, 1, 2, 44);
-    			attr_dev(label_1, "class", "svelte-1cbufcb");
+    			attr_dev(label_1, "class", "svelte-1w3ictj");
     			toggle_class(label_1, "active", /*value*/ ctx[13] || /*value*/ ctx[13] === 0);
     			add_location(label_1, file$5, 23, 2, 525);
-    			attr_dev(div, "class", "svelte-1cbufcb");
+    			attr_dev(div, "class", "svelte-1w3ictj");
     			toggle_class(div, "block", /*block*/ ctx[7]);
     			toggle_class(div, "small", /*small*/ ctx[8]);
     			toggle_class(div, "large", /*large*/ ctx[9]);
@@ -2755,6 +2777,24 @@ var app = (function () {
     	}
     }
 
+    const current = () => {
+      const [action, param] = location.hash.slice(1).split('?');
+
+      return { action, param }
+    };
+
+    const go = (action, param) => {
+      let hash = action || "";
+      if (param) hash += '?' + param;
+      location.hash = hash;
+    };
+
+    const { subscribe: subscribe$1, set } = writable(current());
+
+    window.addEventListener("hashchange", () => set(current()));
+
+    var router = { subscribe: subscribe$1, go };
+
     const persist = (name, value) => {
       const stored = localStorage.getItem(name);
       value = writable(!stored ? value : JSON.parse(stored));
@@ -2766,7 +2806,7 @@ var app = (function () {
       return value
     };
 
-    const { subscribe: subscribe$1, update: update$1 } = persist('myLinks', {});
+    const { subscribe: subscribe$2, update: update$1 } = persist('myLinks', {});
 
     const add = link =>
       update$1(links => {
@@ -2781,40 +2821,132 @@ var app = (function () {
       });
 
     var links = {
-      subscribe: subscribe$1,
+      subscribe: subscribe$2,
       add,
       del
     };
 
-    const current = () => {
-      const [action, param] = location.hash.slice(1).split('?');
-
-      return { action, param }
-    };
-
-    const go = (action, param) => {
-      let hash = action || "";
-      if (param) hash += '?' + param;
-      location.hash = hash;
-    };
-
-    const { subscribe: subscribe$2, set } = writable(current());
-
-    window.addEventListener("hashchange", () => set(current()));
-
-    var router = { subscribe: subscribe$2, go };
-
     /* src/Create.svelte generated by Svelte v3.16.7 */
     const file$7 = "src/Create.svelte";
 
-    // (1:0) <Container small scrollx>
+    // (4:2) <Input     block     large     label={message.url || "Enter URL you want to shorten, e.g. http://example.com"}     on:input={(e) => (url = e.detail)}     value={url}     on:enter={() => submit()}     invalid={message.url}   >
+    function create_default_slot_2(ctx) {
+    	let current;
+
+    	const button = new Button({
+    			props: {
+    				hidden: !/*url*/ ctx[0],
+    				label: "X",
+    				large: true
+    			},
+    			$$inline: true
+    		});
+
+    	button.$on("click", /*click_handler*/ ctx[7]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(button.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(button, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const button_changes = {};
+    			if (dirty & /*url*/ 1) button_changes.hidden = !/*url*/ ctx[0];
+    			button.$set(button_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(button.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(button.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(button, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2.name,
+    		type: "slot",
+    		source: "(4:2) <Input     block     large     label={message.url || \\\"Enter URL you want to shorten, e.g. http://example.com\\\"}     on:input={(e) => (url = e.detail)}     value={url}     on:enter={() => submit()}     invalid={message.url}   >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (20:2) <Input     block     large     label={message.mail || "You can specify your email, to edit this link in future"}     on:input={(e) => (mail = e.detail)}     value={mail}     hints={emails()}     on:enter={() => submit()}     invalid={message.mail}   >
+    function create_default_slot_1(ctx) {
+    	let current;
+
+    	const button = new Button({
+    			props: {
+    				hidden: !/*mail*/ ctx[1],
+    				label: "X",
+    				large: true
+    			},
+    			$$inline: true
+    		});
+
+    	button.$on("click", /*click_handler_1*/ ctx[10]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(button.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(button, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const button_changes = {};
+    			if (dirty & /*mail*/ 2) button_changes.hidden = !/*mail*/ ctx[1];
+    			button.$set(button_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(button.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(button.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(button, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(20:2) <Input     block     large     label={message.mail || \\\"You can specify your email, to edit this link in future\\\"}     on:input={(e) => (mail = e.detail)}     value={mail}     hints={emails()}     on:enter={() => submit()}     invalid={message.mail}   >",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (1:0) <Container small middle>
     function create_default_slot$2(ctx) {
-    	let t0;
+    	let h2;
     	let t1;
-    	let t2;
-    	let p;
-    	let t3_value = /*message*/ ctx[2].message + "";
+    	let h4;
     	let t3;
+    	let t4;
+    	let t5;
+    	let t6;
+    	let p;
+    	let t7_value = /*message*/ ctx[2].message + "";
+    	let t7;
     	let p_hidden_value;
     	let current;
 
@@ -2824,13 +2956,15 @@ var app = (function () {
     				large: true,
     				label: /*message*/ ctx[2].url || "Enter URL you want to shorten, e.g. http://example.com",
     				value: /*url*/ ctx[0],
-    				invalid: /*message*/ ctx[2].url
+    				invalid: /*message*/ ctx[2].url,
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	input0.$on("input", /*input_handler*/ ctx[5]);
-    	input0.$on("enter", /*enter_handler*/ ctx[6]);
+    	input0.$on("input", /*input_handler*/ ctx[8]);
+    	input0.$on("enter", /*enter_handler*/ ctx[9]);
 
     	const input1 = new Input({
     			props: {
@@ -2838,13 +2972,16 @@ var app = (function () {
     				large: true,
     				label: /*message*/ ctx[2].mail || "You can specify your email, to edit this link in future",
     				value: /*mail*/ ctx[1],
-    				invalid: /*message*/ ctx[2].mail
+    				hints: /*emails*/ ctx[3](),
+    				invalid: /*message*/ ctx[2].mail,
+    				$$slots: { default: [create_default_slot_1] },
+    				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	input1.$on("input", /*input_handler_1*/ ctx[7]);
-    	input1.$on("enter", /*enter_handler_1*/ ctx[8]);
+    	input1.$on("input", /*input_handler_1*/ ctx[11]);
+    	input1.$on("enter", /*enter_handler_1*/ ctx[12]);
 
     	const button = new Button({
     			props: {
@@ -2857,30 +2994,44 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	button.$on("click", /*click_handler*/ ctx[9]);
+    	button.$on("click", /*click_handler_2*/ ctx[13]);
 
     	const block = {
     		c: function create() {
-    			create_component(input0.$$.fragment);
-    			t0 = space();
-    			create_component(input1.$$.fragment);
+    			h2 = element("h2");
+    			h2.textContent = "Welcome! Ready to get started?";
     			t1 = space();
+    			h4 = element("h4");
+    			h4.textContent = "No registration, no ads, no logs, no fee.";
+    			t3 = space();
+    			create_component(input0.$$.fragment);
+    			t4 = space();
+    			create_component(input1.$$.fragment);
+    			t5 = space();
     			create_component(button.$$.fragment);
-    			t2 = space();
+    			t6 = space();
     			p = element("p");
-    			t3 = text(t3_value);
+    			t7 = text(t7_value);
+    			attr_dev(h2, "class", "svelte-xzpybw");
+    			add_location(h2, file$7, 1, 2, 27);
+    			attr_dev(h4, "class", "svelte-xzpybw");
+    			add_location(h4, file$7, 2, 2, 69);
     			p.hidden = p_hidden_value = !/*message*/ ctx[2].message;
-    			add_location(p, file$7, 27, 2, 639);
+    			add_location(p, file$7, 44, 2, 978);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(input0, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			mount_component(input1, target, anchor);
+    			insert_dev(target, h2, anchor);
     			insert_dev(target, t1, anchor);
+    			insert_dev(target, h4, anchor);
+    			insert_dev(target, t3, anchor);
+    			mount_component(input0, target, anchor);
+    			insert_dev(target, t4, anchor);
+    			mount_component(input1, target, anchor);
+    			insert_dev(target, t5, anchor);
     			mount_component(button, target, anchor);
-    			insert_dev(target, t2, anchor);
+    			insert_dev(target, t6, anchor);
     			insert_dev(target, p, anchor);
-    			append_dev(p, t3);
+    			append_dev(p, t7);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -2888,17 +3039,27 @@ var app = (function () {
     			if (dirty & /*message*/ 4) input0_changes.label = /*message*/ ctx[2].url || "Enter URL you want to shorten, e.g. http://example.com";
     			if (dirty & /*url*/ 1) input0_changes.value = /*url*/ ctx[0];
     			if (dirty & /*message*/ 4) input0_changes.invalid = /*message*/ ctx[2].url;
+
+    			if (dirty & /*$$scope, url*/ 16385) {
+    				input0_changes.$$scope = { dirty, ctx };
+    			}
+
     			input0.$set(input0_changes);
     			const input1_changes = {};
     			if (dirty & /*message*/ 4) input1_changes.label = /*message*/ ctx[2].mail || "You can specify your email, to edit this link in future";
     			if (dirty & /*mail*/ 2) input1_changes.value = /*mail*/ ctx[1];
     			if (dirty & /*message*/ 4) input1_changes.invalid = /*message*/ ctx[2].mail;
+
+    			if (dirty & /*$$scope, mail*/ 16386) {
+    				input1_changes.$$scope = { dirty, ctx };
+    			}
+
     			input1.$set(input1_changes);
     			const button_changes = {};
     			if (dirty & /*url*/ 1) button_changes.disabled = !/*url*/ ctx[0];
     			if (dirty & /*url*/ 1) button_changes.label = /*url*/ ctx[0] ? "Let's shorten" : "URL required";
     			button.$set(button_changes);
-    			if ((!current || dirty & /*message*/ 4) && t3_value !== (t3_value = /*message*/ ctx[2].message + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*message*/ 4) && t7_value !== (t7_value = /*message*/ ctx[2].message + "")) set_data_dev(t7, t7_value);
 
     			if (!current || dirty & /*message*/ 4 && p_hidden_value !== (p_hidden_value = !/*message*/ ctx[2].message)) {
     				prop_dev(p, "hidden", p_hidden_value);
@@ -2918,12 +3079,16 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(input0, detaching);
-    			if (detaching) detach_dev(t0);
-    			destroy_component(input1, detaching);
+    			if (detaching) detach_dev(h2);
     			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(h4);
+    			if (detaching) detach_dev(t3);
+    			destroy_component(input0, detaching);
+    			if (detaching) detach_dev(t4);
+    			destroy_component(input1, detaching);
+    			if (detaching) detach_dev(t5);
     			destroy_component(button, detaching);
-    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(t6);
     			if (detaching) detach_dev(p);
     		}
     	};
@@ -2932,7 +3097,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(1:0) <Container small scrollx>",
+    		source: "(1:0) <Container small middle>",
     		ctx
     	});
 
@@ -2945,7 +3110,7 @@ var app = (function () {
     	const container = new Container({
     			props: {
     				small: true,
-    				scrollx: true,
+    				middle: true,
     				$$slots: { default: [create_default_slot$2] },
     				$$scope: { ctx }
     			},
@@ -2966,7 +3131,7 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			const container_changes = {};
 
-    			if (dirty & /*$$scope, message, url, mail*/ 1031) {
+    			if (dirty & /*$$scope, message, url, mail*/ 16391) {
     				container_changes.$$scope = { dirty, ctx };
     			}
 
@@ -2998,10 +3163,26 @@ var app = (function () {
     }
 
     function instance$7($$self, $$props, $$invalidate) {
+    	let $links;
+    	validate_store(links, "links");
+    	component_subscribe($$self, links, $$value => $$invalidate(6, $links = $$value));
     	let url = "";
     	let mail = "";
     	let message = {};
     	let interval = null;
+
+    	onMount(async () => {
+    		const clipboard = await navigator.clipboard.readText();
+
+    		if (clipboard.startsWith("http")) {
+    			$$invalidate(0, url = clipboard);
+    		}
+    	});
+
+    	const emails = () => {
+    		const arr = Object.values($links).map(l => l.mail).filter(m => m);
+    		return [...new Set(arr)];
+    	};
 
     	const submit = async () => {
     		if (!url) return;
@@ -3029,11 +3210,13 @@ var app = (function () {
     		interval = setInterval(() => $$invalidate(2, message = {}), 10000);
     	};
 
+    	const click_handler = () => $$invalidate(0, url = "");
     	const input_handler = e => $$invalidate(0, url = e.detail);
     	const enter_handler = () => submit();
+    	const click_handler_1 = () => $$invalidate(1, mail = "");
     	const input_handler_1 = e => $$invalidate(1, mail = e.detail);
     	const enter_handler_1 = () => submit();
-    	const click_handler = () => submit();
+    	const click_handler_2 = () => submit();
 
     	$$self.$capture_state = () => {
     		return {};
@@ -3044,19 +3227,24 @@ var app = (function () {
     		if ("mail" in $$props) $$invalidate(1, mail = $$props.mail);
     		if ("message" in $$props) $$invalidate(2, message = $$props.message);
     		if ("interval" in $$props) interval = $$props.interval;
+    		if ("$links" in $$props) links.set($links = $$props.$links);
     	};
 
     	return [
     		url,
     		mail,
     		message,
+    		emails,
     		submit,
     		interval,
+    		$links,
+    		click_handler,
     		input_handler,
     		enter_handler,
+    		click_handler_1,
     		input_handler_1,
     		enter_handler_1,
-    		click_handler
+    		click_handler_2
     	];
     }
 
@@ -3084,7 +3272,7 @@ var app = (function () {
     }
 
     // (1:0) <Input   block   large   label={message.id || location.origin + '/'}   on:input={(e) => (id = e.detail)}   value={id}   on:enter={() => router.go('search', id)}   invalid={message.id} >
-    function create_default_slot_2(ctx) {
+    function create_default_slot_2$1(ctx) {
     	let div;
     	let t;
     	let current;
@@ -3155,7 +3343,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2.name,
+    		id: create_default_slot_2$1.name,
     		type: "slot",
     		source: "(1:0) <Input   block   large   label={message.id || location.origin + '/'}   on:input={(e) => (id = e.detail)}   value={id}   on:enter={() => router.go('search', id)}   invalid={message.id} >",
     		ctx
@@ -3164,8 +3352,8 @@ var app = (function () {
     	return block;
     }
 
-    // (45:10) <BtnGroup center block>
-    function create_default_slot_1(ctx) {
+    // (45:10) <BtnGroup right block>
+    function create_default_slot_1$1(ctx) {
     	let t;
     	let current;
 
@@ -3226,9 +3414,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1.name,
+    		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(45:10) <BtnGroup center block>",
+    		source: "(45:10) <BtnGroup right block>",
     		ctx
     	});
 
@@ -3257,9 +3445,9 @@ var app = (function () {
 
     	const btngroup = new BtnGroup({
     			props: {
-    				center: true,
+    				right: true,
     				block: true,
-    				$$slots: { default: [create_default_slot_1] },
+    				$$slots: { default: [create_default_slot_1$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -3283,13 +3471,13 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = "/" + /*link*/ ctx[14].id);
     			attr_dev(a, "target", "_blank");
     			add_location(a, file$8, 36, 10, 619);
-    			attr_dev(td0, "class", "svelte-t1tmv9");
+    			attr_dev(td0, "class", "svelte-c3ik5a");
     			add_location(td0, file$8, 35, 8, 604);
-    			attr_dev(td1, "class", "svelte-t1tmv9");
+    			attr_dev(td1, "class", "svelte-c3ik5a");
     			add_location(td1, file$8, 40, 8, 734);
-    			attr_dev(td2, "class", "svelte-t1tmv9");
+    			attr_dev(td2, "class", "svelte-c3ik5a");
     			add_location(td2, file$8, 43, 8, 782);
-    			attr_dev(tr, "class", "svelte-t1tmv9");
+    			attr_dev(tr, "class", "svelte-c3ik5a");
     			add_location(tr, file$8, 34, 6, 591);
     		},
     		m: function mount(target, anchor) {
@@ -3389,15 +3577,15 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(th0, "class", "svelte-t1tmv9");
+    			attr_dev(th0, "class", "svelte-c3ik5a");
     			add_location(th0, file$8, 29, 6, 501);
-    			attr_dev(th1, "class", "svelte-t1tmv9");
+    			attr_dev(th1, "class", "svelte-c3ik5a");
     			add_location(th1, file$8, 30, 6, 521);
-    			attr_dev(th2, "class", "svelte-t1tmv9");
+    			attr_dev(th2, "class", "svelte-c3ik5a");
     			add_location(th2, file$8, 31, 6, 539);
-    			attr_dev(tr, "class", "svelte-t1tmv9");
+    			attr_dev(tr, "class", "svelte-c3ik5a");
     			add_location(tr, file$8, 28, 4, 490);
-    			attr_dev(table, "class", "svelte-t1tmv9");
+    			attr_dev(table, "class", "svelte-c3ik5a");
     			add_location(table, file$8, 27, 2, 478);
     		},
     		m: function mount(target, anchor) {
@@ -3490,7 +3678,7 @@ var app = (function () {
     				label: /*message*/ ctx[2].id || location.origin + "/",
     				value: /*id*/ ctx[0],
     				invalid: /*message*/ ctx[2].id,
-    				$$slots: { default: [create_default_slot_2] },
+    				$$slots: { default: [create_default_slot_2$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -3836,7 +4024,7 @@ var app = (function () {
     const file$b = "src/App.svelte";
 
     // (9:2) <BtnGroup right>
-    function create_default_slot_2$1(ctx) {
+    function create_default_slot_2$2(ctx) {
     	let t0;
     	let t1;
     	let current;
@@ -3925,7 +4113,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2$1.name,
+    		id: create_default_slot_2$2.name,
     		type: "slot",
     		source: "(9:2) <BtnGroup right>",
     		ctx
@@ -3935,7 +4123,7 @@ var app = (function () {
     }
 
     // (5:0) <Header>
-    function create_default_slot_1$1(ctx) {
+    function create_default_slot_1$2(ctx) {
     	let h1;
     	let t0_value = (/*$router*/ ctx[0].action || "Shorty") + "";
     	let t0;
@@ -3946,7 +4134,7 @@ var app = (function () {
     	const btngroup = new BtnGroup({
     			props: {
     				right: true,
-    				$$slots: { default: [create_default_slot_2$1] },
+    				$$slots: { default: [create_default_slot_2$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -3998,7 +4186,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1$1.name,
+    		id: create_default_slot_1$2.name,
     		type: "slot",
     		source: "(5:0) <Header>",
     		ctx
@@ -4258,13 +4446,13 @@ var app = (function () {
     	let t1;
     	let current;
 
-    	document.title = title_value = "shorty / " + (/*$router*/ ctx[0].action || "add") + " " + (/*$router*/ ctx[0].param
-    	? "/ " + /*$router*/ ctx[0].param
+    	document.title = title_value = "shorty / " + (/*$router*/ ctx[0].action || "add") + (/*$router*/ ctx[0].param
+    	? " / " + /*$router*/ ctx[0].param
     	: "");
 
     	const header = new Header({
     			props: {
-    				$$slots: { default: [create_default_slot_1$1] },
+    				$$slots: { default: [create_default_slot_1$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4296,8 +4484,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*$router*/ 1) && title_value !== (title_value = "shorty / " + (/*$router*/ ctx[0].action || "add") + " " + (/*$router*/ ctx[0].param
-    			? "/ " + /*$router*/ ctx[0].param
+    			if ((!current || dirty & /*$router*/ 1) && title_value !== (title_value = "shorty / " + (/*$router*/ ctx[0].action || "add") + (/*$router*/ ctx[0].param
+    			? " / " + /*$router*/ ctx[0].param
     			: ""))) {
     				document.title = title_value;
     			}

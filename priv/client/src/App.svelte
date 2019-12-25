@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>shorty / {$router.action || "add"} {$router.param ? "/ " + $router.param : ''}</title>
+  <title>shorty / {$router.action || "add"}{$router.param ? " / " + $router.param : ''}</title>
 </svelte:head>
 
 <Header>
