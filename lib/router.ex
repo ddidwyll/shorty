@@ -2,6 +2,7 @@ defmodule Router do
   use Plug.Router
 
   import Links
+  import Links.Validator
 
   @client_dir Application.get_env(:shorty, :client_dir)
 
@@ -25,6 +26,20 @@ defmodule Router do
     case get_link(id) do
       {:ok, %{url: url, confirmed: true}} -> redirect(conn, url)
       _ -> redirect(conn, "/#404?" <> id)
+    end
+  end
+
+  post "/create" do
+    url = conn.body_params["url"] || ""
+    mail = conn.body_params["mail"]
+
+    with {:ok, valid} <- build_link(url, mail),
+         {:ok, link} <- create(valid) do
+      %{id: id, confirm_token: token} = link
+      message = ~s/{"id":"#{id}","mail":"#{mail}","token":"#{token}","url":"#{url}"}/
+      send_resp(conn, 200, message)
+    else
+      {:error, err} -> send_resp(conn, 400, err)
     end
   end
 
