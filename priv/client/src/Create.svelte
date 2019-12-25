@@ -1,3 +1,5 @@
+<svelte:window on:focus={() => get_clipboard()} />
+
 <Container small middle>
   <h2>Welcome! Ready to get started?</h2>
   <h4>No registration, no ads, no logs, no fee.</h4>
@@ -11,11 +13,23 @@
     invalid={message.url}
   >
     <Button
+      on:click={() => (url = clipboard)}
+      hidden={!clipboard || url}
+      label="< {clipboard}"
+      clean
+      large
+    >
+      paste
+    </Button>
+    <Button
       on:click={() => (url = "")}
       hidden={!url}
-      label="X"
+      danger={message.url}
+      label="clear"
       large
-    />
+    >
+      {message.url ? '!' : 'x'}
+    </Button>
   </Input>
   <Input
     block
@@ -30,9 +44,12 @@
     <Button
       on:click={() => (mail = "")}
       hidden={!mail}
-      label="X"
+      danger={message.mail}
+      label="clear"
       large
-    />
+    >
+      {message.mail ? '!' : 'x'}
+    </Button>
   </Input>
   <Button
     on:click={() => submit()}
@@ -57,13 +74,14 @@
   let mail = ""
   let message = {}
   let interval = null
+  let clipboard = ""
 
-  onMount(async () => {
-    const clipboard = await navigator.clipboard.readText()
-    if (clipboard.startsWith('http')) {
-      url = clipboard
-    }
-  })
+  const get_clipboard = async () => {
+    const str = await navigator.clipboard.readText()
+    if (str.startsWith('http')) clipboard = str
+  }
+  
+  onMount(() => get_clipboard())
 
   const emails = () => {
     const arr = Object.values($links).map(l => l.mail).filter(m => m)
@@ -96,7 +114,7 @@
     }
 
     clearInterval(interval)
-    interval = setInterval(() => (message = {}), 10000)
+    interval = setInterval(() => (message = {}), 5000)
   }
 </script>
 
