@@ -47,7 +47,7 @@
           </a>
         </td>
         <td>
-          {link.url}
+          <span>{link.url}</span>
         </td>
         <td>
           <BtnGroup right block>
@@ -60,6 +60,7 @@
             <Button
               on:click={() => router.go("edit", link.id)}
               label="Edit"
+              hidden={!$links[link.id] && !link.shadow}
               clean
               small
             />
@@ -146,5 +147,12 @@
   }
   tr:nth-child(odd) {
     background-color: var(--common-background-color-lighten);
+  }
+  span {
+    display: inline-block;
+    max-width: 36vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-truncate: elipsis;
   }
 </style>

@@ -1874,7 +1874,7 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(figure, "class", "svelte-1w3ictj");
+    			attr_dev(figure, "class", "svelte-4pj98e");
     			add_location(figure, file$5, 28, 4, 725);
     		},
     		m: function mount(target, anchor) {
@@ -1940,7 +1940,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "svelte-1w3ictj");
+    			attr_dev(span, "class", "svelte-4pj98e");
     			add_location(span, file$5, 30, 8, 773);
     			dispose = listen_dev(span, "click", click_handler, false, false, false);
     		},
@@ -2025,16 +2025,16 @@ var app = (function () {
     			input_1.hidden = /*hidden*/ ctx[2];
     			input_1.required = /*required*/ ctx[10];
     			input_1.autofocus = /*autofocus*/ ctx[16];
-    			attr_dev(input_1, "class", "svelte-1w3ictj");
+    			attr_dev(input_1, "class", "svelte-4pj98e");
     			toggle_class(input_1, "valid", /*valid*/ ctx[3]);
     			toggle_class(input_1, "invalid", /*invalid*/ ctx[4]);
     			toggle_class(input_1, "clean", /*clean*/ ctx[5]);
     			toggle_class(input_1, "simple", /*simple*/ ctx[6]);
     			add_location(input_1, file$5, 1, 2, 44);
-    			attr_dev(label_1, "class", "svelte-1w3ictj");
+    			attr_dev(label_1, "class", "svelte-4pj98e");
     			toggle_class(label_1, "active", /*value*/ ctx[13] || /*value*/ ctx[13] === 0);
     			add_location(label_1, file$5, 23, 2, 525);
-    			attr_dev(div, "class", "svelte-1w3ictj");
+    			attr_dev(div, "class", "svelte-4pj98e");
     			toggle_class(div, "block", /*block*/ ctx[7]);
     			toggle_class(div, "small", /*small*/ ctx[8]);
     			toggle_class(div, "large", /*large*/ ctx[9]);
@@ -3540,7 +3540,7 @@ var app = (function () {
     	return block;
     }
 
-    // (66:12) <Button               on:click={() => links.del(link.id)}               label="Hide"               hidden={!$links[link.id]}               clean               small             >
+    // (67:12) <Button               on:click={() => links.del(link.id)}               label="Hide"               hidden={!$links[link.id]}               clean               small             >
     function create_default_slot_2$1(ctx) {
     	let t;
 
@@ -3560,7 +3560,7 @@ var app = (function () {
     		block,
     		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(66:12) <Button               on:click={() => links.del(link.id)}               label=\\\"Hide\\\"               hidden={!$links[link.id]}               clean               small             >",
+    		source: "(67:12) <Button               on:click={() => links.del(link.id)}               label=\\\"Hide\\\"               hidden={!$links[link.id]}               clean               small             >",
     		ctx
     	});
 
@@ -3589,7 +3589,12 @@ var app = (function () {
     	}
 
     	const button1 = new Button({
-    			props: { label: "Edit", clean: true, small: true },
+    			props: {
+    				label: "Edit",
+    				hidden: !/*$links*/ ctx[4][/*link*/ ctx[18].id] && !/*link*/ ctx[18].shadow,
+    				clean: true,
+    				small: true
+    			},
     			$$inline: true
     		});
 
@@ -3631,6 +3636,9 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
+    			const button1_changes = {};
+    			if (dirty & /*$links, links_list*/ 24) button1_changes.hidden = !/*$links*/ ctx[4][/*link*/ ctx[18].id] && !/*link*/ ctx[18].shadow;
+    			button1.$set(button1_changes);
     			const button2_changes = {};
     			if (dirty & /*$links, links_list*/ 24) button2_changes.hidden = !/*$links*/ ctx[4][/*link*/ ctx[18].id];
 
@@ -3686,6 +3694,7 @@ var app = (function () {
     	let a_href_value;
     	let t3;
     	let td1;
+    	let span;
     	let t4_value = /*link*/ ctx[18].url + "";
     	let t4;
     	let t5;
@@ -3713,6 +3722,7 @@ var app = (function () {
     			t2 = text(t2_value);
     			t3 = space();
     			td1 = element("td");
+    			span = element("span");
     			t4 = text(t4_value);
     			t5 = space();
     			td2 = element("td");
@@ -3721,13 +3731,15 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = "/" + /*link*/ ctx[18].id);
     			attr_dev(a, "target", "_blank");
     			add_location(a, file$8, 44, 10, 1099);
-    			attr_dev(td0, "class", "svelte-1xguyjw");
+    			attr_dev(td0, "class", "svelte-1l1iait");
     			add_location(td0, file$8, 43, 8, 1084);
-    			attr_dev(td1, "class", "svelte-1xguyjw");
+    			attr_dev(span, "class", "svelte-1l1iait");
+    			add_location(span, file$8, 49, 10, 1229);
+    			attr_dev(td1, "class", "svelte-1l1iait");
     			add_location(td1, file$8, 48, 8, 1214);
-    			attr_dev(td2, "class", "svelte-1xguyjw");
-    			add_location(td2, file$8, 51, 8, 1262);
-    			attr_dev(tr, "class", "svelte-1xguyjw");
+    			attr_dev(td2, "class", "svelte-1l1iait");
+    			add_location(td2, file$8, 51, 8, 1275);
+    			attr_dev(tr, "class", "svelte-1l1iait");
     			add_location(tr, file$8, 42, 6, 1071);
     		},
     		m: function mount(target, anchor) {
@@ -3739,7 +3751,8 @@ var app = (function () {
     			append_dev(a, t2);
     			append_dev(tr, t3);
     			append_dev(tr, td1);
-    			append_dev(td1, t4);
+    			append_dev(td1, span);
+    			append_dev(span, t4);
     			append_dev(tr, t5);
     			append_dev(tr, td2);
     			mount_component(btngroup, td2, null);
@@ -3852,19 +3865,19 @@ var app = (function () {
     			}
 
     			attr_dev(th0, "colspan", "3");
-    			attr_dev(th0, "class", "svelte-1xguyjw");
+    			attr_dev(th0, "class", "svelte-1l1iait");
     			add_location(th0, file$8, 3, 6, 34);
-    			attr_dev(tr0, "class", "svelte-1xguyjw");
+    			attr_dev(tr0, "class", "svelte-1l1iait");
     			add_location(tr0, file$8, 2, 4, 23);
-    			attr_dev(th1, "class", "svelte-1xguyjw");
+    			attr_dev(th1, "class", "svelte-1l1iait");
     			add_location(th1, file$8, 37, 6, 976);
-    			attr_dev(th2, "class", "svelte-1xguyjw");
+    			attr_dev(th2, "class", "svelte-1l1iait");
     			add_location(th2, file$8, 38, 6, 996);
-    			attr_dev(th3, "class", "svelte-1xguyjw");
+    			attr_dev(th3, "class", "svelte-1l1iait");
     			add_location(th3, file$8, 39, 6, 1014);
-    			attr_dev(tr1, "class", "svelte-1xguyjw");
+    			attr_dev(tr1, "class", "svelte-1l1iait");
     			add_location(tr1, file$8, 36, 4, 965);
-    			attr_dev(table, "class", "svelte-1xguyjw");
+    			attr_dev(table, "class", "svelte-1l1iait");
     			add_location(table, file$8, 1, 2, 11);
     		},
     		m: function mount(target, anchor) {
