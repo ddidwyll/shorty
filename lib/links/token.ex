@@ -8,7 +8,7 @@ defmodule Links.Token do
     import Base, only: [url_encode64: 1]
 
     strong_rand_bytes(7)
-    |> url_encode64
+    |> url_encode64()
     |> replace("_", "1")
     |> replace("-", "0")
     |> binary_part(0, 7)

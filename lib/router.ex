@@ -30,9 +30,14 @@ defmodule Router do
     case get_link(id) do
       {:ok, link} ->
         %{shadow_mail: shadow, url: url, confirmed: confirmed} = link
-      message = ~s/{"id":"#{id}","shadow":"#{shadow}","url":"#{url}","confirmed":"#{confirmed}"}/
-      send_resp(conn, 200, message)
-      {:error, err} -> send_resp(conn, 404, err)
+
+        message =
+          ~s/{"id":"#{id}","shadow":"#{shadow}","url":"#{url}","confirmed":"#{confirmed}"}/
+
+        send_resp(conn, 200, message)
+
+      {:error, err} ->
+        send_resp(conn, 404, err)
     end
   end
 
@@ -50,7 +55,9 @@ defmodule Router do
     with {:ok, valid} <- build_link(url, mail),
          {:ok, link} <- create(valid) do
       %{id: id, confirm_token: token} = link
+
       message = ~s/{"id":"#{id}","mail":"#{mail}","token":"#{token}","url":"#{url}"}/
+
       send_resp(conn, 200, message)
     else
       {:error, err} -> send_resp(conn, 400, err)
