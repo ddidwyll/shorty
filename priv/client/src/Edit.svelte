@@ -67,9 +67,3 @@
     interval = setInterval(() => (message = {}), 10000)
   }
 </script>
-
-<style>
-  :global(.block) {
-    margin-bottom: 1.1rem;
-  }
-</style>

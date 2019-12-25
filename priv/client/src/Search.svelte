@@ -1,67 +1,69 @@
-<Container small scrollx>
-  <Input
-    block
-    label={message.id || location.origin + '/'}
-    on:input={(e) => (id = e.detail)}
-    value={id}
-    on:enter={() => router.go('search', id)}
-    invalid={message.id}
-  >
-    <div>
-      <Button
-        on:click={() => router.go('search') || (id = "")}
-        hidden={!id}
-        label="X"
-        clean
-      />
-      <Button
-        on:click={() => router.go('search', id)}
-        disabled={!id}
-        label="Search"
-        center
-      />
-    </div>
-  </Input>
-</Container>
+<Input
+  block
+  large
+  label={message.id || location.origin + '/'}
+  on:input={(e) => (id = e.detail)}
+  value={id}
+  on:enter={() => router.go('search', id)}
+  invalid={message.id}
+>
+  <div>
+    <Button
+      on:click={() => router.go('search') || (id = "")}
+      hidden={!id}
+      label="X"
+      clean
+      large
+    />
+    <Button
+      on:click={() => router.go('search', id)}
+      disabled={!id}
+      label="Search"
+      large
+    />
+  </div>
+</Input>
 
-<table>
-  <tr>
-    <th>Link</th>
-    <th>To</th>
-    <th></th>
-  </tr>
-  {#each found as link}
+<Slider>
+  <table>
     <tr>
-      <td>
-        <a href="/{link.id}" target="_blank">
-          {location.origin}/{link.id}
-        </a>
-      </td>
-      <td>
-        {link.url}
-      </td>
-      <td>
-        <BtnGroup center block>
-          <Button
-            on:click={() => copy(link.id)}
-            label="Copy"
-            clean
-            small
-          />
-          <Button
-            on:click={() => router.go("edit", link.id)}
-            label="Edit"
-            clean
-            small
-          />
-        </BtnGroup>
-      </td>
+      <th>Link</th>
+      <th>To</th>
+      <th></th>
     </tr>
-  {/each}
-</table>
+    {#each found as link}
+      <tr>
+        <td>
+          <a href="/{link.id}" target="_blank">
+            {location.origin}/{link.id}
+          </a>
+        </td>
+        <td>
+          {link.url}
+        </td>
+        <td>
+          <BtnGroup center block>
+            <Button
+              on:click={() => copy(link.id)}
+              label="Copy"
+              clean
+              small
+            />
+            <Button
+              on:click={() => router.go("edit", link.id)}
+              label="Edit"
+              clean
+              small
+            />
+          </BtnGroup>
+        </td>
+      </tr>
+    {/each}
+  </table>
+</Slider>
 
 <script>
-  import { Input, Container, Button, BtnGroup } from 'forui'
+  import { Input, Container, Button, BtnGroup, Slider } from 'forui'
   import router from './stores/router.js'
   import links from './stores/links.js'
 
@@ -114,7 +116,7 @@
     min-height: auto;
   }
   table {
-    margin: auto;
+    margin: 2rem auto 0;
   }
   th {
     text-align: left;

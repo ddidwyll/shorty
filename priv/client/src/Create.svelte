@@ -1,6 +1,7 @@
 <Container small scrollx>
   <Input
     block
+    large
     label={message.url || "Enter URL you want to shorten, e.g. http://example.com"}
     on:input={(e) => (url = e.detail)}
     value={url}
@@ -9,6 +10,7 @@
   />
   <Input
     block
+    large
     label={message.mail || "You can specify your email, to edit this link in future"}
     on:input={(e) => (mail = e.detail)}
     value={mail}
@@ -18,6 +20,7 @@
   <Button
     on:click={() => submit()}
     disabled={!url}
+    large
     label={url ? 'Let\'s shorten' : 'URL required'}
     width
     center
@@ -68,7 +71,7 @@
 </script>
 
 <style>
-  :global(.block) {
+  :global(.small > .block) {
     margin-bottom: 1.1rem;
   }
 </style>
