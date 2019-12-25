@@ -153,6 +153,5 @@
     max-width: 36vw;
     white-space: nowrap;
     overflow: hidden;
-    text-truncate: elipsis;
   }
 </style>

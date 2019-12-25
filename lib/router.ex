@@ -6,7 +6,11 @@ defmodule Router do
 
   @client_dir Application.get_env(:shorty, :client_dir)
 
-  plug(Plug.Static, at: "/static", from: @client_dir)
+  plug(Plug.Static,
+    at: "/static",
+    gzip: true,
+    from: @client_dir
+  )
 
   plug(Plug.Parsers,
     parsers: [:json],

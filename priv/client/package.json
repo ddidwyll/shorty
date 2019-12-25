@@ -2,7 +2,7 @@
   "name": "shorty-client",
   "version": "0.1.0",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c; gzip -9kf public/bundle.js public/bundle.css",
     "dev": "rollup -c -w"
   },
   "devDependencies": {
