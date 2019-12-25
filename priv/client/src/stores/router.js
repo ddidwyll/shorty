@@ -7,7 +7,7 @@ const current = () => {
 }
 
 const go = (action, param) => {
-  const hash = action || ""
+  let hash = action || ""
   if (param) hash += '?' + param
   location.hash = hash
 }

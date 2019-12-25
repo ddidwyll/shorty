@@ -1,3 +1,7 @@
+<svelte:head>
+  <title>shorty / {$router.action || "add"} {$router.param ? "/ " + $router.param : ''}</title>
+</svelte:head>
+
 <Header>
   <h1 on:click={() => router.go()}>
     {$router.action || 'Shorty'}
@@ -5,7 +9,7 @@
   <BtnGroup right>
     <Button
       on:click={() => router.go()}
-      label="New"
+      label="Add"
       disabled={!$router.action}
       clean
     />

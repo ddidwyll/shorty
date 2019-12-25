@@ -1,31 +1,85 @@
 <Container small scrollx>
   <Input
     block
-    label={message.url || location.origin + '/'}
-    on:input={(e) => (url = e.detail)}
-    value={url}
-    on:enter={() => submit()}
-    invalid={message.url}
+    label={message.id || location.origin + '/'}
+    on:input={(e) => (id = e.detail)}
+    value={id}
+    on:enter={() => router.go('search', id)}
+    invalid={message.id}
   >
-    <Button
-      on:click={() => submit()}
-      disabled={!url}
-      label="Search"
-      center
-    />
+    <div>
+      <Button
+        on:click={() => router.go('search') || (id = "")}
+        hidden={!id}
+        label="X"
+        clean
+      />
+      <Button
+        on:click={() => router.go('search', id)}
+        disabled={!id}
+        label="Search"
+        center
+      />
+    </div>
   </Input>
 </Container>
 
+<table>
+  <tr>
+    <th>Link</th>
+    <th>To</th>
+    <th></th>
+  </tr>
+  {#each found as link}
+    <tr>
+      <td>
+        <a href="/{link.id}" target="_blank">
+          {location.origin}/{link.id}
+        </a>
+      </td>
+      <td>
+        {link.url}
+      </td>
+      <td>
+        <BtnGroup center block>
+          <Button
+            on:click={() => copy(link.id)}
+            label="Copy"
+            clean
+            small
+          />
+          <Button
+            on:click={() => router.go("edit", link.id)}
+            label="Edit"
+            clean
+            small
+          />
+        </BtnGroup>
+      </td>
+    </tr>
+  {/each}
+</table>
+
 <script>
-  import { Input, Container, Button } from 'forui'
+  import { Input, Container, Button, BtnGroup } from 'forui'
+  import router from './stores/router.js'
   import links from './stores/links.js'
 
-  let url = ""
+  let id = $router.param || ""
   let mail = ""
   let message = {}
   let interval = null
 
-  const submit = async () => {
+  $: found = !$router.param
+    ? Object.values($links)
+    : [$links[id] || {}]
+
+  const copy = id => {
+    const url = location.origin + '/' + id
+    navigator.clipboard.writeText(url)
+  }
+
+  /*const submit = async () => {
     if (!url) return
 
     const data = { url, mail: mail || undefined }
@@ -52,11 +106,24 @@
 
     clearInterval(interval)
     interval = setInterval(() => (message = {}), 10000)
-  }
+  }*/
 </script>
 
 <style>
-  :global(.block) {
-    margin-bottom: 1.1rem;
+  :global(.small:not(#hack)) {
+    min-height: auto;
+  }
+  table {
+    margin: auto;
+  }
+  th {
+    text-align: left;
+    background-color: var(--common-background-color-light);
+  }
+  td, th {
+    padding: 0.5rem 1rem;
+  }
+  tr:nth-child(odd) {
+    background-color: var(--common-background-color-lighten);
   }
 </style>

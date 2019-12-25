@@ -30,6 +30,7 @@
 <script>
   import { Input, Container, Button } from 'forui'
   import links from './stores/links.js'
+  import router from './stores/router.js'
 
   let url = ""
   let mail = ""
@@ -55,7 +56,7 @@
     else if (res.status === 200) {
       const link = await res.json()
       links.add(link)
-      location.hash = "success?" + link.id
+      router.go("search", link.id)
     }
     else {
       message = {message: 'Something went wrong, try again later'}
