@@ -20,10 +20,11 @@ defmodule Shorty.MixProject do
 
   defp deps do
     [
-      {:ecto_sql, "~> 3.0"},
+      {:ecto_sql, "~> 3.3"},
       {:postgrex, "~> 0.15.3"},
-      {:plug_cowboy, "~> 2.0"},
-      {:jason, "~> 1.0"}
+      {:plug_cowboy, "~> 2.1"},
+      {:jason, "~> 1.1"},
+      {:bamboo_smtp, "~> 2.1"}
     ]
   end
 end
