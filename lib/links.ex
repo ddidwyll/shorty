@@ -113,4 +113,23 @@ defmodule Links do
     end
     |> transaction()
   end
+
+  def expire_request do
+    import Enum, only: [each: 2]
+    import Ecto.Query, only: [from: 2]
+    import NaiveDateTime, only: [utc_now: 0, add: 3]
+
+    hour_ago =
+      utc_now()
+      |> add(-3600, :second)
+
+    query =
+      from(l in ChReq,
+        where: l.created < ^hour_ago,
+        select: l.new_id
+      )
+
+    all(query)
+    |> each(&(%Link{id: &1} |> delete))
+  end
 end

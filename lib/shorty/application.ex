@@ -6,6 +6,7 @@ defmodule Shorty.Application do
   def start(_type, _args) do
     children = [
       {Links.Repo, []},
+      {Garbage, []},
       {Plug.Cowboy, scheme: :http, plug: Router, options: [port: 8080]}
     ]
 
