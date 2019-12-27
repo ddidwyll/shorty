@@ -11,7 +11,7 @@ defmodule Mailer do
         {recipient, body} ->
           new_email(
             to: recipient,
-            from: {"Shorty app", @from},
+            from: {"Shorty app", @from || "no-reply@shorty"},
             subject: "Short link change request",
             text_body: body
           )
