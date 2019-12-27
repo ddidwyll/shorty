@@ -5,22 +5,33 @@
         <Input
           block
           large
-          label={message.id || location.origin + '/' + ($router.param || '')}
-          on:input={(e) => search(e)}
+          label={message.id || origin + ($router.param || '')}
+          on:input={(e) => router.go('search', e.detail)}
           value={$router.param || ''}
           on:enter={() => find()}
           invalid={message.id}
           valid={found && found.id == $router.param}
+          filter={/[^a-zA-Z0-9-_]+/g}
+          max="15"
         >
           <div>
             <Button
               on:click={() => router.go('search')}
               hidden={!$router.param}
-              label="All"
+              label="All links"
               clean
               large
             >
-            x
+              x
+            </Button>
+            <Button
+              on:click={() => router.go('search', paste)}
+              hidden={!paste || $router.param}
+              label="< {paste}"
+              clean
+              large
+            >
+              paste
             </Button>
             <Button
               on:click={() => find()}
@@ -50,17 +61,21 @@
           <span>{link.url}</span>
         </td>
         <td>
-          <BtnGroup right block>
+          <BtnGroup
+            right
+            block
+          >
+          {#if link.confirmed !== false}
             <Button
-              on:click={() => copy(link.id)}
+              on:click={() => clipboard.copy(origin + link.id)}
               label="Copy"
               clean
               small
             />
             <Button
-              on:click={() => router.go("edit", link.id)}
+              on:click={() => edit(link.id)}
               label="Edit"
-              hidden={!$links[link.id] && !link.shadow}
+              hidden={!(link.token || link.shadow)}
               clean
               small
             />
@@ -71,6 +86,14 @@
               clean
               small
             >x</Button>
+          {:else}
+            <Button
+              label="Uncofirmed"
+              disabled
+              clean
+              small
+            />
+          {/if}
           </BtnGroup>
         </td>
       </tr>
@@ -80,15 +103,19 @@
 
 <script>
   import { Input, Container, Button, BtnGroup, Slider } from 'forui'
+  import clipboard from './stores/clipboard.js'
+  import request from './stores/request.js'
   import router from './stores/router.js'
   import links from './stores/links.js'
   import { onMount } from 'svelte'
 
-  let id = $router.param || ""
-  let mail = ""
+  let id = $router.param || ''
+  let mail = ''
   let message = {}
   let interval = null
   let found = null
+
+  const origin = location.origin + '/'
 
   $: links_list = !$router.param
     ? Object.values($links)
@@ -116,15 +143,19 @@
 
   onMount(() => find())
 
-  const search = e => {
-    const origin = location.origin + '/'
-    const id = e.detail.replace(origin, "")
-    router.go('search', id)
-  }
+  $: paste = $clipboard
+    .replace(origin, '')
+    .replace(/[^a-zA-Z0-9-_]+/g, '')
 
-  const copy = id => {
-    const url = location.origin + '/' + id
-    navigator.clipboard.writeText(url)
+  const edit = id => {
+    const link = found && found.id === id
+      ? found
+      : $links[id]
+
+    if (!link) return
+
+    request.set({ link })
+    router.go('edit', id)
   }
 </script>
 

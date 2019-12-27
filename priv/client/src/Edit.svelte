@@ -1,49 +1,116 @@
 <Container small scrollx>
-<!--  <Input
+  <Input
     block
-    label={message.url || "Enter URL you want to shorten, e.g. http://example.com"}
-    on:input={(e) => (url = e.detail)}
-    value={url}
-    on:enter={() => submit()}
-    invalid={message.url}
+    large
+    label="Link to"
+    value={link.url}
+    disabled
   />
   <Input
     block
-    label={message.mail || "You can specify your email, to edit this link in future"}
+    label={message.id || location.origin + '/' + (id || link.id)}
+    on:input={(e) => (id = e.detail)}
+    invalid={message.id}
+    value={$request.id || id}
+    disabled={$request.id}
+    filter={/[^a-zA-Z0-9-_]+/g}
+    max="15"
+    large
+  />
+  <Input
+    block
+    label={message.mail || 'Email ' + link.shadow}
     on:input={(e) => (mail = e.detail)}
-    value={mail}
-    on:enter={() => submit()}
+    value={$request.mail || mail}
     invalid={message.mail}
+    disabled={$request.id}
+    hidden={!link.shadow}
+    hints={emails()}
+    large
   />
-  <Button
-    on:click={() => submit()}
-    disabled={!url}
-    label={url ? 'Let\'s shorten' : 'URL required'}
-    width
-    center
-  />
-  <p hidden={!message.message}>
-    {message.message}
+  {#if $request.id}
+    <Input
+      block
+      label={message.token || 'Verification code from email'}
+      on:input={(e) => (token = e.detail)}
+      value={token}
+      invalid={message.token}
+      filter={/[^a-zA-Z0-9]+/g}
+      max="7"
+      large
+    >
+      <Button
+        on:click={() => (token = $clipboard)}
+        hidden={token || !$clipboard || $clipboard.replace(/[^a-zA-Z0-9]+/g, '').length !== 7}
+        label="< {$clipboard}"
+        clean
+        large
+      >
+        paste
+      </Button>
+    </Input>
+  {/if}
+  <BtnGroup block gutter>
+    <Button
+      label="Cancel"
+      on:click={() => cancel()}
+      danger
+      width
+      center
+      large
+    />
+    {#if $request.id}
+      <Button
+        label="Confirm"
+        on:click={() => confirm()}
+        disabled={!token || token.length !== 7}
+        width
+        center
+        large
+      />
+    {:else}
+      <Button
+        label={hasToken ? 'Change' : 'Request change'}
+        on:click={() => submit()}
+        disabled={!id || id === link.id || (!hasToken && !mail)}
+        width
+        center
+        large
+      />
+    {/if}
+  </BtnGroup>
+  <p hidden={!message.message && !message.token}>
+    {message.message || message.token}
   </p>
--->  
 </Container>
-<pre hidden={false}>{JSON.stringify($links, null, 2)}</pre>
 
 <script>
-  import { Input, Container, Button } from 'forui'
+  import { Input, Container, Button, BtnGroup } from 'forui'
+  import clipboard from './stores/clipboard.js'
+  import request from './stores/request.js'
+  import router from './stores/router.js'
   import links from './stores/links.js'
 
-  let url = ""
-  let mail = ""
+  $: link = $request
+    ? $request.link || {}
+    : {}
+
+  $: hasToken = !!link.token
+
+  let id = ''
+  let mail = ''
+  let token = ''
   let message = {}
   let interval = null
 
   const submit = async () => {
-    if (!url) return
+    if (!id) return
 
-    const data = { url, mail: mail || undefined }
+    const data = hasToken
+      ? { old: link.id, id, token: link.token }
+      : { old: link.id, id, mail }
 
-    const res = await fetch("/create", {
+    const res = await fetch(hasToken ? '/change' : '/request', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,9 +122,12 @@
       message = await res.json()
     }
     else if (res.status === 200) {
-      const link = await res.json()
-      links.add(link)
-      location.hash = "success?" + link.id
+      if (hasToken) {
+        update(await res.json())
+      } else {
+        message = await res.json()
+        request.pending(id, mail)
+      }
     }
     else {
       message = {message: 'Something went wrong, try again later'}
@@ -65,5 +135,46 @@
 
     clearInterval(interval)
     interval = setInterval(() => (message = {}), 10000)
+  }
+
+  const confirm = async () => {
+    if (!token || token.length !== 7) return
+
+    const res = await fetch('/confirm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token })
+    })
+
+    if (res.status === 400) {
+      message = await res.json()
+    }
+    else if (res.status === 200) {
+      update(await res.json())
+    }
+    else {
+      message = {message: 'Something went wrong, try again later'}
+    }
+
+    clearInterval(interval)
+    interval = setInterval(() => (message = {}), 10000)
+  }
+
+  const update = new_link => {
+    links.add(new_link)
+    links.del(link.id)
+    cancel(new_link.id)
+  }
+
+  const cancel = id => {
+    request.set({})
+    router.go('search', id || $router.param)
+  }
+
+  const emails = () => {
+    const arr = Object.values($links).map(l => l.mail).filter(m => m)
+    return [...new Set(arr)]
   }
 </script>
