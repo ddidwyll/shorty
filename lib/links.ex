@@ -18,10 +18,15 @@ defmodule Links do
     end
   end
 
-  def get_link(id) do
+  def get_link(id, confirmed_only \\ true) do
     case get(Link, id) do
-      nil -> {:error, "{\"id\": \"Url /#{id} not found, maybe it already changed\"}"}
-      link -> {:ok, link}
+      nil ->
+        {:error, "{\"id\": \"Link /#{id} not found, maybe it already changed\"}"}
+
+      link ->
+        if !confirmed_only || link.confirmed,
+          do: {:ok, link},
+          else: {:error, "{\"id\": \"Link /#{id} not confirmed yet\"}"}
     end
   end
 
@@ -35,8 +40,8 @@ defmodule Links do
   defp clone_link(link, new_id) do
     new_link = %{link | id: new_id, confirmed: false, confirm_token: nil}
 
-    case get_link(new_id) do
-      {:ok, _} -> {:error, "{\"new_id\": \"Url /#{new_id} taken, choose another\"}"}
+    case get_link(new_id, false) do
+      {:ok, _} -> {:error, "{\"id\": \"Url /#{new_id} taken, choose another\"}"}
       {:error, _} -> create(new_link, false)
     end
   end
@@ -74,8 +79,8 @@ defmodule Links do
       with {:ok, link} <- get_link(old_id),
            :ok <- confirmation(link, token, :confirm_token),
            {:ok, _} <- clone_link(link, new_id),
-           {:ok, ooo} <- swap_links(old_id, new_id) do
-        {:ok, ooo}
+           {:ok, new_link} <- swap_links(old_id, new_id) do
+        {:ok, new_link}
       end
     end
     |> transaction()
@@ -92,7 +97,7 @@ defmodule Links do
                old_id: old_id
              }
              |> create() do
-        {:ok, ch_req}
+        {:ok, ch_req, link}
       end
     end
     |> transaction()
@@ -102,8 +107,8 @@ defmodule Links do
     fn ->
       with {:ok, req} <- get_req(token),
            %{new_id: new, old_id: old} <- req,
-           {:ok, ooo} <- swap_links(old, new) do
-        {:ok, ooo}
+           {:ok, new_link} <- swap_links(old, new) do
+        {:ok, new_link}
       end
     end
     |> transaction()
