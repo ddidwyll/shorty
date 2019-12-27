@@ -12,14 +12,14 @@
 </Header>
 
 <Main>
-  {#if !$router.action}
-    <Create />
-  {:else if $router.action === "edit"}
+  {#if $router.action === "edit"}
     <Edit />
   {:else if $router.action === "search"}
     <Search />
   {:else if $router.action === "help"}
     <Help />
+  {:else}
+    <Create />
   {/if}
 </Main>
 
