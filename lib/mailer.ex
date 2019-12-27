@@ -3,8 +3,9 @@ defmodule Mailer do
 
   defmodule Confirm do
     import Bamboo.Email
+    import Application, only: [get_env: 2]
 
-    defp from, do: Application.get_env(:shorty, Mailer)[:username] || ""
+    defp from, do: get_env(:shorty, Mailer)[:username] || ""
 
     def send(ch_req, link) do
       case build(ch_req, link) do
