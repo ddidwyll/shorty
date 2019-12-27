@@ -1,31 +1,14 @@
 <svelte:head>
-  <title>shorty / {$router.action || "add"}{$router.param ? " / " + $router.param : ''}</title>
+  <title>
+    shorty / {$router.action || "add"}{$router.param ? " / " + $router.param : ''}
+  </title>
 </svelte:head>
 
 <Header>
   <h1 on:click={() => router.go()}>
     {$router.action || 'Shorty'}
   </h1>
-  <BtnGroup right>
-    <Button
-      on:click={() => router.go()}
-      label="Add"
-      disabled={!$router.action}
-      clean
-    />
-    <Button
-      on:click={() => router.go("search")}
-      label="Search"
-      disabled={$router.action === "search"}
-      clean
-    />
-    <Button
-      on:click={() => router.go("help")}
-      label="Help"
-      disabled={$router.action === "help"}
-      clean
-    />
-  </BtnGroup>
+  <Nav />
 </Header>
 
 <Main>
@@ -41,11 +24,13 @@
 </Main>
 
 <script>
-  import { Header, Main, Button, BtnGroup } from 'forui'
+  import { Header, Main } from 'forui'
   import Create from './Create.svelte'
   import Search from './Search.svelte'
   import Edit from './Edit.svelte'
   import Help from './Help.svelte'
+  import Nav from './Nav.svelte'
+
   import router from './stores/router.js'
 </script>
 

@@ -103,6 +103,10 @@
   let message = {}
   let interval = null
 
+  const headers = {
+    'Content-Type': 'application/json'
+  }
+
   const submit = async () => {
     if (!id) return
 
@@ -112,9 +116,7 @@
 
     const res = await fetch(hasToken ? '/change' : '/request', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(data)
     })
 
@@ -142,9 +144,7 @@
 
     const res = await fetch('/confirm', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({ token })
     })
 
