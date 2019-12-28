@@ -52,9 +52,9 @@
   </Input>
   <Button
     on:click={() => submit()}
-    disabled={!url}
+    disabled={!url || $wait}
     large
-    label={$wait || url ? 'Let\'s shorten' : 'URL required'}
+    label={$wait || (url ? 'Let\'s shorten' : 'URL required')}
     width
     center
   />

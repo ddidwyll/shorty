@@ -72,7 +72,7 @@
       />
     {:else}
       <Button
-        label={$wait || hasToken ? 'Change' : 'Request change'}
+        label={$wait || (hasToken ? 'Change' : 'Request change')}
         on:click={() => submit()}
         disabled={!id || id === link.id || (!hasToken && !mail) || $wait}
         width

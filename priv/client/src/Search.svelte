@@ -36,7 +36,7 @@
             <Button
               on:click={() => find()}
               disabled={!$router.param || wasFound || $wait}
-              label={$wait || wasFound ? 'Found' : message.id ? 'Not found' : 'Search'}
+              label={$wait || (wasFound ? 'Found' : message.id ? 'Not found' : 'Search')}
               danger={message.id}
               success={foundId == $router.param}
               large
