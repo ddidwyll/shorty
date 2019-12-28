@@ -4,8 +4,4 @@ const { subscribe, update, set } = persist('request', {})
 
 const pending = (id, mail) => update(request => ({ ...request, id, mail }))
 
-export default {
-  subscribe,
-  pending,
-  set
-}
+export default { subscribe, pending, set }

@@ -54,7 +54,7 @@
       <tr>
         <td>
           <a href="/{link.id}" target="_blank">
-            {location.origin}/{link.id}
+            {origin}{link.id}
           </a>
         </td>
         <td>

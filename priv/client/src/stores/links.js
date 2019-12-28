@@ -1,4 +1,5 @@
 import { persist } from 'svelte-persist'
+import { derived } from 'svelte/store'
 
 const { subscribe, update } = persist('myLinks', {})
 
@@ -14,8 +15,11 @@ const del = id =>
     return { ...links }
   })
 
-export default {
-  subscribe,
-  add,
-  del
-}
+export const emails = derived({ subscribe }, $links => {
+  const arr = Object.values($links)
+    .map(l => l.mail)
+    .filter(m => m)
+  return [...new Set(arr)]
+})
+
+export default { subscribe, add, del }

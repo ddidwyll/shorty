@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "rollup -c; gzip -9kf public/bundle.js public/bundle.css",
-    "dev": "rollup -c -w"
+    "dev": "rm public/*.gz; rollup -c -w"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",

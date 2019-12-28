@@ -16,4 +16,13 @@ const { subscribe, set } = writable(current())
 
 window.addEventListener("hashchange", () => set(current()))
 
-export default { subscribe, go }
+const post = (to, data) =>
+  fetch(to, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })  
+
+export default { subscribe, go, post }

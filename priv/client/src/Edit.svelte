@@ -19,13 +19,14 @@
   />
   <Input
     block
+    type="email"
     label={message.mail || 'Email ' + link.shadow}
     on:input={(e) => (mail = e.detail)}
     value={$request.mail || mail}
     invalid={message.mail}
     disabled={$request.id}
     hidden={!link.shadow}
-    hints={emails()}
+    hints={$emails}
     large
   />
   {#if $request.id}
@@ -86,10 +87,10 @@
 
 <script>
   import { Input, Container, Button, BtnGroup } from 'forui'
+  import links, { emails } from './stores/links.js'
   import clipboard from './stores/clipboard.js'
   import request from './stores/request.js'
   import router from './stores/router.js'
-  import links from './stores/links.js'
 
   $: link = $request
     ? $request.link || {}
@@ -103,10 +104,6 @@
   let message = {}
   let interval = null
 
-  const headers = {
-    'Content-Type': 'application/json'
-  }
-
   const submit = async () => {
     if (!id) return
 
@@ -114,11 +111,8 @@
       ? { old: link.id, id, token: link.token }
       : { old: link.id, id, mail }
 
-    const res = await fetch(hasToken ? '/change' : '/request', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(data)
-    })
+    const to = hasToken ? '/change' : '/request'
+    const res = await router.post(to, data)
 
     if (res.status === 400) {
       message = await res.json()
@@ -132,7 +126,7 @@
       }
     }
     else {
-      message = {message: 'Something went wrong, try again later'}
+      message = { message: 'Something went wrong, try again later' }
     }
 
     clearInterval(interval)
@@ -142,11 +136,7 @@
   const confirm = async () => {
     if (!token || token.length !== 7) return
 
-    const res = await fetch('/confirm', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ token })
-    })
+    const res = await router.post('/confirm', { token })
 
     if (res.status === 400) {
       message = await res.json()
@@ -155,7 +145,7 @@
       update(await res.json())
     }
     else {
-      message = {message: 'Something went wrong, try again later'}
+      message = { message: 'Something went wrong, try again later' }
     }
 
     clearInterval(interval)
@@ -171,10 +161,5 @@
   const cancel = id => {
     request.set({})
     router.go('search', id || $router.param)
-  }
-
-  const emails = () => {
-    const arr = Object.values($links).map(l => l.mail).filter(m => m)
-    return [...new Set(arr)]
   }
 </script>

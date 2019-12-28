@@ -32,10 +32,11 @@
   <Input
     block
     large
+    type="email"
     label={message.mail || 'You can specify your email, to edit this link in future'}
     on:input={(e) => (mail = e.detail)}
     value={mail}
-    hints={emails()}
+    hints={$emails}
     on:enter={() => submit()}
     invalid={message.mail}
   >
@@ -64,32 +65,21 @@
 
 <script>
   import { Input, Container, Button } from 'forui'
+  import links, { emails } from './stores/links.js'
   import clipboard from './stores/clipboard.js'
   import router from './stores/router.js'
-  import links from './stores/links.js'
 
   let url = ''
   let mail = ''
   let message = {}
   let interval = null
 
-  const emails = () => {
-    const arr = Object.values($links).map(l => l.mail).filter(m => m)
-    return [...new Set(arr)]
-  }
-
   const submit = async () => {
     if (!url) return
 
     const data = { url, mail: mail || undefined }
 
-    const res = await fetch('/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
+    const res = await router.post('/create', data)
 
     if (res.status === 400) {
       message = await res.json()
