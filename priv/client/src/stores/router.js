@@ -12,17 +12,40 @@ const go = (action, param) => {
   location.hash = hash
 }
 
-const { subscribe, set } = writable(current())
+const hash = writable(current())
+const busy = writable(false)
 
-window.addEventListener("hashchange", () => set(current()))
+window.addEventListener("hashchange", () => hash.set(current()))
 
-const post = (to, data) =>
-  fetch(to, {
+const post = async (to, data) => {
+  busy.set('send')
+
+  const res = await fetch(to, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
-  })  
+  })
 
-export default { subscribe, go, post }
+  busy.set(false)
+  return res
+}
+
+const search = async (id) => {
+  busy.set('fetch')
+  const res = await fetch('/get/' + id)
+  busy.set(false)
+  return res
+}
+
+export const wait = {
+  subscribe: busy.subscribe
+}
+
+export default {
+  subscribe: hash.subscribe,
+  search,
+  go,
+  post
+}

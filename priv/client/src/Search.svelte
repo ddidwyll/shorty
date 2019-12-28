@@ -10,7 +10,7 @@
           value={$router.param || ''}
           on:enter={() => find()}
           invalid={message.id}
-          valid={found && found.id == $router.param}
+          valid={foundId == $router.param}
           filter={/[^a-zA-Z0-9-_]+/g}
           max="15"
         >
@@ -35,10 +35,10 @@
             </Button>
             <Button
               on:click={() => find()}
-              disabled={!$router.param}
-              label={message.id ? 'Not found' : 'Search'}
+              disabled={!$router.param || wasFound || $wait}
+              label={$wait || wasFound ? 'Found' : message.id ? 'Not found' : 'Search'}
               danger={message.id}
-              success={found && found.id == $router.param}
+              success={foundId == $router.param}
               large
             />
           </div>
@@ -103,9 +103,9 @@
 
 <script>
   import { Input, Container, Button, BtnGroup, Slider } from 'forui'
+  import router, { wait } from './stores/router.js'
   import clipboard from './stores/clipboard.js'
   import request from './stores/request.js'
-  import router from './stores/router.js'
   import links from './stores/links.js'
   import { onMount } from 'svelte'
 
@@ -123,6 +123,9 @@
       ? [found]
       : []
 
+  $: foundId = found ? found.id : null
+  $: wasFound = foundId && foundId === $router.param
+
   const find = async () => {
     if (!$router.param) return
 
@@ -130,12 +133,12 @@
       return found = $links[$router.param]
     }
     
-    const res = await fetch('/get/' + $router.param)
+    const res = await router.search($router.param)
 
     if (res.status == 404) {
       message = await res.json()
       clearInterval(interval)
-      interval = setInterval(() => (message = {}), 2000)
+      interval = setInterval(() => (message = {}), 3000)
     } else if (res.status == 200) {
       found = await res.json()
     }
@@ -148,7 +151,7 @@
     .replace(/[^a-zA-Z0-9-_]+/g, '')
 
   const edit = id => {
-    const link = found && found.id === id
+    const link = foundId === id
       ? found
       : $links[id]
 

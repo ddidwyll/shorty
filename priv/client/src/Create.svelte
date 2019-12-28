@@ -54,7 +54,7 @@
     on:click={() => submit()}
     disabled={!url}
     large
-    label={url ? 'Let\'s shorten' : 'URL required'}
+    label={$wait || url ? 'Let\'s shorten' : 'URL required'}
     width
     center
   />
@@ -65,9 +65,9 @@
 
 <script>
   import { Input, Container, Button } from 'forui'
+  import router, { wait } from './stores/router.js'
   import links, { emails } from './stores/links.js'
   import clipboard from './stores/clipboard.js'
-  import router from './stores/router.js'
 
   let url = ''
   let mail = ''

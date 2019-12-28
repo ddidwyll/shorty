@@ -5,7 +5,7 @@
 </svelte:head>
 
 <Header>
-  <h1 on:click={() => router.go()}>
+  <h1 on:click={() => router.go()} class:wait={$wait}>
     {$router.action || 'Shorty'}
   </h1>
   <Nav />
@@ -31,7 +31,7 @@
   import Help from './Help.svelte'
   import Nav from './Nav.svelte'
 
-  import router from './stores/router.js'
+  import router, { wait } from './stores/router.js'
 </script>
 
 <style>
@@ -40,5 +40,19 @@
   }
   h1 {
     text-transform: capitalize;
+  }
+  h1.wait {
+    animation: 1s pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 </style>

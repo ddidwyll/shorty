@@ -55,6 +55,7 @@
     <Button
       label="Cancel"
       on:click={() => cancel()}
+      disabled={$wait}
       danger
       width
       center
@@ -62,18 +63,18 @@
     />
     {#if $request.id}
       <Button
-        label="Confirm"
+        label={$wait || 'Confirm'}
         on:click={() => confirm()}
-        disabled={!token || token.length !== 7}
+        disabled={!token || token.length !== 7 || $wait}
         width
         center
         large
       />
     {:else}
       <Button
-        label={hasToken ? 'Change' : 'Request change'}
+        label={$wait || hasToken ? 'Change' : 'Request change'}
         on:click={() => submit()}
-        disabled={!id || id === link.id || (!hasToken && !mail)}
+        disabled={!id || id === link.id || (!hasToken && !mail) || $wait}
         width
         center
         large
@@ -87,10 +88,10 @@
 
 <script>
   import { Input, Container, Button, BtnGroup } from 'forui'
+  import router, { wait } from './stores/router.js'
   import links, { emails } from './stores/links.js'
   import clipboard from './stores/clipboard.js'
   import request from './stores/request.js'
-  import router from './stores/router.js'
 
   $: link = $request
     ? $request.link || {}
