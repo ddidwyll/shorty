@@ -49,12 +49,15 @@ defmodule Links do
   defp swap_links(old_id, new_id) do
     import Ecto.Changeset, only: [change: 2]
 
-    %Link{id: old_id}
-    |> delete!()
+    fn ->
+      %Link{id: old_id}
+      |> delete!()
 
-    %Link{id: new_id}
-    |> change(confirmed: true)
-    |> update!(returning: true)
+      %Link{id: new_id}
+      |> change(confirmed: true)
+      |> update!(returning: true)
+    end
+    |> transaction()
   end
 
   defp confirmation(link, guess, type) do
@@ -75,43 +78,34 @@ defmodule Links do
   end
 
   def instant_change(old_id, new_id, token) do
-    fn ->
-      with {:ok, link} <- get_link(old_id),
-           :ok <- confirmation(link, token, :confirm_token),
-           {:ok, _} <- clone_link(link, new_id),
-           {:ok, new_link} <- swap_links(old_id, new_id) do
-        {:ok, new_link}
-      end
+    with {:ok, link} <- get_link(old_id),
+         :ok <- confirmation(link, token, :confirm_token),
+         {:ok, _} <- clone_link(link, new_id),
+         {:ok, new_link} <- swap_links(old_id, new_id) do
+      {:ok, new_link}
     end
-    |> transaction()
   end
 
   def request_change(old_id, new_id, mail) do
-    fn ->
-      with {:ok, link} <- get_link(old_id),
-           :ok <- confirmation(link, mail, :owner_mail),
-           {:ok, _} <- clone_link(link, new_id),
-           {:ok, ch_req} <-
-             %ChReq{
-               new_id: new_id,
-               old_id: old_id
-             }
-             |> create() do
-        {:ok, ch_req, link}
-      end
+    with {:ok, link} <- get_link(old_id),
+         :ok <- confirmation(link, mail, :owner_mail),
+         {:ok, _} <- clone_link(link, new_id),
+         {:ok, ch_req} <-
+           %ChReq{
+             new_id: new_id,
+             old_id: old_id
+           }
+           |> create() do
+      {:ok, ch_req, link}
     end
-    |> transaction()
   end
 
   def confirm_request(token) do
-    fn ->
-      with {:ok, req} <- get_req(token),
-           %{new_id: new, old_id: old} <- req,
-           {:ok, new_link} <- swap_links(old, new) do
-        {:ok, new_link}
-      end
+    with {:ok, req} <- get_req(token),
+         %{new_id: new, old_id: old} <- req,
+         {:ok, new_link} <- swap_links(old, new) do
+      {:ok, new_link}
     end
-    |> transaction()
   end
 
   def expire_request do
