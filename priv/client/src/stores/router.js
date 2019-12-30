@@ -12,6 +12,15 @@ const go = (action, param) => {
   location.hash = hash
 }
 
+const error = (key, code) => {
+  const json = {}
+  json[key] = 'Server not response (correctly)'
+  return {
+    status: code,
+    json: () => json
+  }
+}
+
 const hash = writable(current())
 const busy = writable(false)
 
@@ -26,7 +35,7 @@ const post = async (to, data) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
-  })
+  }).catch(() => error('message', 400))
 
   busy.set(false)
   return res
@@ -34,7 +43,10 @@ const post = async (to, data) => {
 
 const search = async (id) => {
   busy.set('fetch')
+
   const res = await fetch('/get/' + id)
+    .catch(() => error('id', 404))
+
   busy.set(false)
   return res
 }

@@ -53,14 +53,12 @@
   <Button
     on:click={() => submit()}
     disabled={!url || $wait}
+    danger={message.message}
     large
-    label={$wait || (url ? 'Let\'s shorten' : 'URL required')}
+    label={$wait || message.message || (url ? 'Let\'s shorten' : 'URL required')}
     width
     center
   />
-  <p hidden={!message.message}>
-    {message.message}
-  </p>
 </Container>
 
 <script>
@@ -90,7 +88,7 @@
       router.go('search', link.id)
     }
     else {
-      message = {message: 'Something went wrong, try again later'}
+      message = {message: 'Something went wrong'}
     }
 
     clearInterval(interval)
