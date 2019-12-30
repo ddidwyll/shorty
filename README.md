@@ -1,21 +1,23 @@
 # Shorty
+Short link service written in elixir and svelte
 
-**TODO: Add description**
+## Requirements
+- Latest elixir and erlang/OTP installed
+- Installed and runnig PostgreSQL
+- Installed inotify-tools for linux
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `shorty` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:shorty, "~> 0.1.0"}
-  ]
-end
+## Install
+```Bash
+git clone https://github.com/ddidwyll/shorty.git
+cd shorty
+# get deps
+mix deps.get
+# run migration (you may change postgres user and pass in config/*.ex)
+mix ecto.create
+mix ecto.migrate
+# you can change smtp provider by editing config/config.ex
+# build
+SMTP_USERNAME=your_mail@yandex.ru SMTP_PASSWORD=pass mix release
+# start
+_build/dev/rel/shorty/bin/shorty daemon
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/shorty](https://hexdocs.pm/shorty).
-
