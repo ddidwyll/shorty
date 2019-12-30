@@ -21,3 +21,7 @@ SMTP_USERNAME=your_mail@yandex.ru SMTP_PASSWORD=pass mix release
 # start
 _build/dev/rel/shorty/bin/shorty daemon
 ```
+## Client
+At this moment, client does not have all dependencies, so ready-made builds are included. 
+
+You can see source code [here](https://github.com/ddidwyll/shorty/tree/master/priv/client/src)
