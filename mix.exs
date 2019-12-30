@@ -7,7 +7,8 @@ defmodule Shorty.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      aliases: aliases()
     ]
   end
 
@@ -24,7 +25,14 @@ defmodule Shorty.MixProject do
       {:postgrex, "~> 0.15.3"},
       {:plug_cowboy, "~> 2.1"},
       {:jason, "~> 1.1"},
-      {:bamboo_smtp, "~> 2.1"}
+      {:bamboo_smtp, "~> 2.1"},
+      {:hammox, "~> 0.2.1"}
+    ]
+  end
+
+  defp aliases do
+    [
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
