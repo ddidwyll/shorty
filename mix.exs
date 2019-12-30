@@ -26,7 +26,7 @@ defmodule Shorty.MixProject do
       {:plug_cowboy, "~> 2.1"},
       {:jason, "~> 1.1"},
       {:bamboo_smtp, "~> 2.1"},
-      {:hammox, "~> 0.2.1"}
+      {:hammox, "~> 0.2.1", only: :test}
     ]
   end
 
