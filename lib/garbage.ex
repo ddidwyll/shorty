@@ -4,6 +4,10 @@ defmodule Garbage do
   import Links
   import Process
   import GenServer
+  import Application
+
+  def start_link(_),
+    do: start_link(__MODULE__, nil)
 
   def init(_) do
     collect()
@@ -11,14 +15,13 @@ defmodule Garbage do
   end
 
   def handle_info(:collect, _) do
-    expire_request()
+    expire_requests()
     collect()
     {:noreply, nil}
   end
 
-  def start_link(_),
-    do: start_link(__MODULE__, nil)
-
-  defp collect,
-    do: send_after(self(), :collect, 3600000)
+  defp collect do
+    expires = get_env(:shorty, :request_expires_sec, 3600)
+    send_after(self(), :collect, expires * 1000)
+  end
 end

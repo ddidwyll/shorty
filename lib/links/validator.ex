@@ -1,8 +1,14 @@
+alias Links.Link
+
+defmodule Links.ValidatorBehaviour do
+  @callback build_link(binary, binary | nil) :: {:ok, Link.t()} | {:error, binary}
+end
+
 defmodule Links.Validator do
-  alias Links.Link
+  @behaviour Links.ValidatorBehaviour
 
   defp validate_url(url) when not is_binary(url) or url == "",
-    do: {:error, "{\"url\": \"Url is required\"}"}
+    do: {:error, ~s/{"url":"Url is required"}/}
 
   defp validate_url(url) do
     import URI, only: [parse: 1]
@@ -16,7 +22,7 @@ defmodule Links.Validator do
     if is_binary(host) && is_binary(scheme) do
       {:ok, trim(url)}
     else
-      {:error, "{\"url\": \"#{url} is not valid url\"}"}
+      {:error, ~s/{"url":"#{url} is not valid url"}/}
     end
   end
 
@@ -53,11 +59,12 @@ defmodule Links.Validator do
         shadow_mail({name, reverse(a), reverse(t)})
       }
     else
-      _ -> {:error, "{\"mail\": \"#{mail} is not valid email\"}"}
+      _ -> {:error, ~s/{"mail":"#{mail} is not valid email"}/}
     end
   end
 
-  def build_link(url, owner \\ nil) do
+  @impl true
+  def build_link(url, owner) do
     with {:ok, url} <- validate_url(url),
          {:ok, owner_mail, shadow_mail} <- prepare_mail(owner) do
       {:ok,

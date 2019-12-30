@@ -1,4 +1,6 @@
 defmodule Links.Token do
+  @type t :: binary | nil
+
   use Ecto.Type
 
   import String, only: [replace: 3]

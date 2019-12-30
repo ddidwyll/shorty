@@ -4,13 +4,9 @@ defmodule Shorty.Application do
   use Application
 
   def start(_type, _args) do
-    children = [
-      {Links.Repo, []},
-      {Garbage, []},
-      {Plug.Cowboy, scheme: :http, plug: Router, options: [port: 8080]}
-    ]
-
+    children = Application.get_env(:shorty, :children)
     opts = [strategy: :one_for_one, name: Shorty.Supervisor]
+
     Supervisor.start_link(children, opts)
   end
 end

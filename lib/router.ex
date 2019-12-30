@@ -1,10 +1,9 @@
 defmodule Router do
   use Plug.Router
 
-  import Links
-  import Links.Validator
+  import Application, only: [get_env: 2]
 
-  @client_dir Application.get_env(:shorty, :client_dir)
+  @client_dir get_env(:shorty, :client_dir)
 
   plug(Plug.Static,
     at: "/static",
@@ -27,7 +26,7 @@ defmodule Router do
   end
 
   get "/get/:id" do
-    case get_link(id, false) do
+    case links().get_link(id, false) do
       {:ok, link} ->
         %{shadow_mail: shadow, url: url, confirmed: confirmed} = link
         json = ~s/{"id":"#{id}","shadow":"#{shadow}","url":"#{url}","confirmed":#{confirmed}}/
@@ -39,7 +38,7 @@ defmodule Router do
   end
 
   get "/:id" do
-    case get_link(id) do
+    case links().get_link(id) do
       {:ok, %{url: url}} -> redirect(conn, url)
       _ -> redirect(conn, "/#search?" <> id)
     end
@@ -49,8 +48,8 @@ defmodule Router do
     url = conn.body_params["url"] || ""
     mail = conn.body_params["mail"]
 
-    with {:ok, valid} <- build_link(url, mail),
-         {:ok, link} <- create(valid) do
+    with {:ok, valid} <- validator().build_link(url, mail),
+         {:ok, link} <- links().create(valid) do
       send_resp(conn, 200, link_json(link))
     else
       {:error, err} -> send_resp(conn, 400, err)
@@ -62,16 +61,16 @@ defmodule Router do
     new_id = conn.body_params["id"] || ""
     mail = conn.body_params["mail"] || ""
 
-    case request_change(old_id, new_id, mail) do
-      {:ok, {:ok, ch_req, link}} ->
-        Mailer.Confirm.send(ch_req, link)
+    with {:ok, ch_req, link} <-
+           links().request_change(old_id, new_id, mail),
+         {:ok, _} <- confirm_mailer().send(new_id, ch_req.id, link.url, mail) do
+      message =
+        ~s/{"message":"Check your mail (also spam). Verification code expires in one hour."}/
 
-        message =
-          ~s/{"message":"Check your mail (also spam). Verification code expires in one hour."}/
-
-        send_resp(conn, 200, message)
-
-      {_, {:error, err}} ->
+      send_resp(conn, 200, message)
+    else
+      {:error, err} ->
+        links().cancel_change(new_id)
         send_resp(conn, 400, err)
     end
   end
@@ -79,8 +78,8 @@ defmodule Router do
   post "/confirm" do
     token = conn.body_params["token"] || ""
 
-    case confirm_request(token) do
-      {_, {:error, err}} -> send_resp(conn, 400, err)
+    case links().confirm_request(token) do
+      {:error, err} -> send_resp(conn, 400, err)
       {:ok, link} -> send_resp(conn, 200, link_json(link))
     end
   end
@@ -90,8 +89,8 @@ defmodule Router do
     new_id = conn.body_params["id"] || ""
     token = conn.body_params["token"] || ""
 
-    case instant_change(old_id, new_id, token) do
-      {_, {:error, err}} -> send_resp(conn, 400, err)
+    case links().instant_change(old_id, new_id, token) do
+      {:error, err} -> send_resp(conn, 400, err)
       {:ok, link} -> send_resp(conn, 200, link_json(link))
     end
   end
@@ -106,4 +105,8 @@ defmodule Router do
     |> resp(301, "")
     |> put_resp_header("location", to || "/")
   end
+
+  defp links, do: get_env(:shorty, :links_mod)
+  defp validator, do: get_env(:shorty, :validator_mod)
+  defp confirm_mailer, do: get_env(:shorty, :mailer_mod)
 end
