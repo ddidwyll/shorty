@@ -4,7 +4,6 @@ Short link service written in elixir and svelte
 ## Requirements
 - Latest elixir and erlang/OTP installed
 - Installed and runnig PostgreSQL
-- Installed inotify-tools for linux
 
 ## Install
 ```Bash
